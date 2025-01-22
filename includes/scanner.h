@@ -2,10 +2,12 @@
 #ifndef SCANNER_H
 #define SCANNER_H
 
-#include "common_includes.h"
+#include <fstream>
+#include <iostream>
+#include "token.h"
+#include "enums.h"
 
-
-using std::pair, std::fstream;
+using std::pair;
 
 constexpr int STATES = 60; // 59 is error state
 constexpr int TRANSITIONS = 27; // all valid ILOC characters plus one transition for all other characters
@@ -15,23 +17,25 @@ constexpr int BUF_SIZE = 1024; //change to test performance
 class Scanner
 {
 private:
-    fstream& file;
+
+    std::ifstream& file;
+
     int table[STATES][TRANSITIONS];
     bool acceptingState[STATES]{};
     int charClass[NUM_CHARS];
-    pair<int,int> type[STATES];
-    char buf[BUF_SIZE];
-    int bufPos = 0;
-    int toRead = 0;
+    Token type[STATES];
+
+    void initTable();
     void initAcceptingStates();
     void initCharClasses();
-    void initTable();
-    void initType();
+    void initTypes();
+
     void clear();
+
 public:
-    Scanner(fstream& _file);
+    Scanner(std::ifstream& _file);
     ~Scanner() = default;
-    pair<int, int> nextToken();
+    Token nextToken();
 };
 
 #endif

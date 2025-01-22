@@ -2,7 +2,7 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 
-enum TOKENS {
+enum TOKEN_TYPE {
     MEMOP,
     LOADI,
     ARITHOP,
@@ -18,12 +18,12 @@ enum TOKENS {
     ERR
 };
 
-enum MEMOPS {
+enum MEMOP_TYPE {
     LOAD,
     STORE
 };
 
-enum ARITHOPS {
+enum ARITHOP_TYPE {
     ADD,
     SUB,
     MULT,
@@ -31,7 +31,7 @@ enum ARITHOPS {
     RSHIFT
 };
 
-enum MODES {
+enum PARSER_MODE {
     HELP,
     REP,
     PARSE,

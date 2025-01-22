@@ -1,11 +1,11 @@
 #include "scanner.h"
 #include <iostream>
 
-Scanner::Scanner(fstream& _file) : file(_file){
+Scanner::Scanner(std::ifstream& _file) : file(_file) {
     initAcceptingStates();
     initCharClasses();
     initTable();
-    initType();
+    initTypes();
 };
 
 void Scanner::initAcceptingStates() {
@@ -162,25 +162,25 @@ void Scanner::initTable() {
     table[0][19] = 58;
 }
 
-void Scanner::initType() {
-    std::fill(&type[0],&type[STATES], std::make_pair(ERR,ERR));
-    type[6] = std::make_pair(MEMOP,STORE);
-    type[9] = std::make_pair(ARITHOP,SUB);
-    type[14] = std::make_pair(MEMOP,LOAD);
-    type[20] = std::make_pair(ARITHOP,LSHIFT);
-    type[27] = std::make_pair(ARITHOP,RSHIFT);
-    type[28] = std::make_pair(REG,0);
-    type[33] = std::make_pair(ARITHOP,MULT);
-    type[37] = std::make_pair(ARITHOP,ADD);
-    type[44] = std::make_pair(OUTPUT,OUTPUT);
-    type[46] = std::make_pair(INTO,INTO);
-    type[47] = std::make_pair(COMMA,COMMA);
-    type[49] = std::make_pair(COMMENT,COMMENT);
-    type[50] = std::make_pair(CONSTANT,0);
-    type[52] = std::make_pair(LOADI,LOADI);
-    type[56] = std::make_pair(NOP,NOP);
-    type[57] = std::make_pair(ENDFILE,ENDFILE);
-    type[58] = std::make_pair(ENDLINE,ENDLINE);
+void Scanner::initTypes() {
+    std::fill(&type[0],&type[STATES], Token(ERR,ERR));
+    type[6] = Token(MEMOP,STORE);
+    type[9] = Token(ARITHOP,SUB);
+    type[14] = Token(MEMOP,LOAD);
+    type[20] = Token(ARITHOP,LSHIFT);
+    type[27] = Token(ARITHOP,RSHIFT);
+    type[28] = Token(REG,0);
+    type[33] = Token(ARITHOP,MULT);
+    type[37] = Token(ARITHOP,ADD);
+    type[44] = Token(OUTPUT,OUTPUT);
+    type[46] = Token(INTO,INTO);
+    type[47] = Token(COMMA,COMMA);
+    type[49] = Token(COMMENT,COMMENT);
+    type[50] = Token(CONSTANT,0);
+    type[52] = Token(LOADI,LOADI);
+    type[56] = Token(NOP,NOP);
+    type[57] = Token(ENDFILE,ENDFILE);
+    type[58] = Token(ENDLINE,ENDLINE);
 }
 
 void Scanner::clear() {
@@ -191,27 +191,33 @@ void Scanner::clear() {
     file.unget();
 }
 
-pair<int,int> Scanner::nextToken() {
+Token Scanner::nextToken() {
     int state = 0;
     int prevState = 0;
     int lexeme = 0;
+
     while(state != 59) {
         prevState = state;
         char c = file.get();
-        if ('0' <= c && c <= '9' ) {
-            lexeme *= 10;
-            lexeme += c - 48;
+
+        if ('0' <= c && c <= '9') {
+            lexeme = lexeme * 10 + (c - '0');
         }
+
         state = (c == EOF ? table[state][25] : table[state][charClass[c]]);
     }
     if (!acceptingState[prevState]) {
         clear();
-        return std::make_pair(ERR,ERR);
+        return Token(ERR,ERR);
     }
+
     file.unget();
-    pair<int,int> token = type[prevState];
-    if (token.first == REG || token.first == CONSTANT) {
-        token.second = lexeme;
+
+    Token token = type[prevState];
+
+    if (token.type == REG || token.type == CONSTANT) {
+        token.lexeme = lexeme;
     }
+
     return token;
 }

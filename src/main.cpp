@@ -1,84 +1,7 @@
 #include "scanner.h"
 #include <iostream>
 
-void prettyPrint(std::pair<int,int> token) {
-   switch (token.first)
-   {
-   case  MEMOP:
-      switch (token.second) 
-      {
-      case LOAD:
-         std::cout << "<MEMOP,LOAD> ";
-         break;
-      case STORE:
-         std::cout << "<MEMOP,STORE> ";
-         break;
-      default:
-         std::cout << "<MEMOP,ERR> ";
-         break;
-      }
-      break;
-   case LOADI:
-      std::cout << "<LOADI,LOADI> ";
-      break;
-   case ARITHOP:
-      switch (token.second)
-      {
-      case ADD:
-         std::cout << "<ARITHOP,ADD> ";
-         break;
-      case SUB:
-         std::cout << "<ARITHOP,SUB> ";
-         break;
-      case MULT:
-         std::cout << "<ARITHOP,MULT> ";
-         break;
-      case LSHIFT:
-         std::cout << "<ARITHOP,LSHIFT> ";
-         break;
-      case RSHIFT:
-         std::cout << "<ARITHOP,RSHIFT> ";
-         break;
-      default:
-         std::cout << "<ARITHOP,ERR> ";
-         break;
-      }
-      break;
-   case OUTPUT:
-      std::cout << "<OUTPUT, OUTPUT>";
-      break;
-   case NOP:
-      std::cout << "<NOP,NOP> ";
-      break;
-   case COMMA:
-      std::cout << "<COMMA,COMMA> ";
-      break;
-   case INTO:
-      std::cout << "<INTO,INTO> ";
-      break;
-   case REG:
-      std::cout << "<REG," << token.second << "> ";
-      break;
-   case CONSTANT:
-      std::cout << "<CONSTANT, " << token.second << "> ";
-      break;
-   case COMMENT:
-      std::cout << "<COMMENT,COMMENT> ";
-      break;
-   case ENDFILE:
-      std::cout << "<EOF,EOF>";
-      break;
-   case ENDLINE:
-      std::cout << "<EOL,EOL>\n";
-      break;
-   case ERR:
-      std::cout << "<ERR, ERR>";
-      break;
-   default:
-      std::cout << "<SRS ERR, SRS ERR>";
-      break;
-   }
-};
+
 
 // const char * helpMessage = "C++ based parser for a simplified version of the ILOC Language\n"
 //             "     -h              produces a list of valid command-line arguments\n"
@@ -113,14 +36,20 @@ void prettyPrint(std::pair<int,int> token) {
     //         //code for default behavior 
     //     }
     // }
-    fstream file("../Tests/test_inputs/t4.i"); 
+    std::ifstream file("/mnt/class_files/Classes/CSCE-434/Class/lab1/test_inputs/t1.i"); 
+    
+    if (!file.is_open()) {
+      std::cout << "Err opening file";
+      return 0;
+    }
     Scanner s (file);
-    pair<int,int> currToken = s.nextToken();
-    prettyPrint(currToken);
-    while (currToken.first != ENDFILE)
+    Token currToken = s.nextToken();
+    currToken.print();
+
+   while (currToken.type != ENDFILE)
     {
       currToken = s.nextToken();
-      prettyPrint(currToken);
+      currToken.print();
     }
     
     return 0;
