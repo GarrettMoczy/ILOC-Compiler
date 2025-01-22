@@ -1,0 +1,18 @@
+COMP 434, Lab 1 Timing Test
+
+Host:		compute.engr.tamu.edu
+Date:		01-11-25
+Username:	zoran
+Executable:	../lab1_ref
+Files from:	/mnt/class_files/Classes/CSCE-434/Class/ILOC/Scalability/SLOCs/
+
+File T001k.i:  0.0176 seconds
+File T002k.i:  0.0173 seconds
+File T004k.i:  0.0185 seconds
+File T008k.i:  0.0218 seconds
+File T016k.i:  0.0278 seconds
+File T032k.i:  0.0405 seconds
+File T064k.i:  0.0666 seconds
+File T128k.i:  0.1187 seconds
+
+End of run.
