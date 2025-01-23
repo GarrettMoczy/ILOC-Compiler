@@ -3,7 +3,6 @@
 #define SCANNER_H
 
 #include <fstream>
-#include <iostream>
 #include "token.h"
 #include "buffer.h"
 #include "enums.h"

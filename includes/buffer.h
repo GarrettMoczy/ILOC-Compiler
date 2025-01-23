@@ -1,9 +1,10 @@
+//buffer.h
 #ifndef BUFFER_H
 #define BUFFER_H
 
 #include <fstream>
 
-constexpr int BUF_SIZE = 1028;
+constexpr int BUF_SIZE = 1024;
 
 class Buffer
 {

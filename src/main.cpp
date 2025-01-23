@@ -13,7 +13,7 @@
 
 
  int main (int argc, char * argv[]) {
-   
+   std::ios::sync_with_stdio(false);
 
     // fflush(stdout);
     // if (argc == 1) {
@@ -47,13 +47,13 @@
     auto start = std::chrono::high_resolution_clock::now();
 
     Token currToken = s.nextToken();
-   // currToken.print();
+    // currToken.print();
 
 
    while (currToken.type != ENDFILE)
     {
-      currToken = s.nextToken();
-     // currToken.print();
+    currToken = s.nextToken();
+    // currToken.print();
     }
 
     auto end = std::chrono::high_resolution_clock::now();

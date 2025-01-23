@@ -23,5 +23,5 @@ char Buffer::get() {
 }
 
 void Buffer::unget() {
-    if (pos > 0) buf[pos--];
+    if (pos > 0) pos--;
 }
