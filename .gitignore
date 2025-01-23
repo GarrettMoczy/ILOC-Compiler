@@ -1,0 +1,11 @@
+# Ignore the .vscode and tests folder
+.vscode/
+tests/
+
+# Ignore executable files (common executable extensions)
+*.exe
+*.out
+*.app
+*.tar
+# Ignore object files
+*.o
