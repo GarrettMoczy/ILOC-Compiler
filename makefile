@@ -1,4 +1,3 @@
-build:
 CXX = g++
 CXXFLAGS = -std=c++20 -Wall -I./includes -O3 -flto
 

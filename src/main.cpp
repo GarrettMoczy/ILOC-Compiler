@@ -1,6 +1,6 @@
 #include "scanner.h"
 #include <iostream>
-
+#include <chrono>
 
 
 // const char * helpMessage = "C++ based parser for a simplified version of the ILOC Language\n"
@@ -36,21 +36,29 @@
     //         //code for default behavior 
     //     }
     // }
-    std::ifstream file("/mnt/class_files/Classes/CSCE-434/Class/lab1/test_inputs/t1.i"); 
+    std::ifstream file("/mnt/class_files/Classes/CSCE-434/Class/lab1/test_inputs/T128k.i"); 
     
     if (!file.is_open()) {
       std::cout << "Err opening file";
       return 0;
     }
     Scanner s (file);
+
+    auto start = std::chrono::high_resolution_clock::now();
+
     Token currToken = s.nextToken();
-    currToken.print();
+   // currToken.print();
+
 
    while (currToken.type != ENDFILE)
     {
       currToken = s.nextToken();
-      currToken.print();
+     // currToken.print();
     }
-    
+
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Time to scan: " << duration.count() << " microseconds\n";
     return 0;
  }

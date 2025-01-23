@@ -1,7 +1,7 @@
 #include "scanner.h"
 #include <iostream>
 
-Scanner::Scanner(std::ifstream& _file) : file(_file) {
+Scanner::Scanner(std::ifstream& _file) : file{_file} {
     initAcceptingStates();
     initCharClasses();
     initTable();
@@ -52,16 +52,15 @@ void Scanner::initCharClasses() {
     charClass['\n'] = 19;
     charClass[','] = 20;
     charClass[' '] = 21;
+    charClass['\t'] = 21;
     charClass['/'] = 22;
-    charClass['\t'] = 23;
-    for (char c = '0'; c <= '9'; ++c) charClass[c] = 24;
+    for (char c = '0'; c <= '9'; ++c) charClass[(int) c] = 24;
 }
 
 void Scanner::initTable() {
     std::fill(&table[0][0], &table[0][0] + (STATES * TRANSITIONS), 59);
     // trim white space at beginning
     table[0][21] = 0;
-    table[0][23] = 0;
 
     
     // "store "
@@ -185,7 +184,7 @@ void Scanner::initTypes() {
 
 void Scanner::clear() {
     char c = file.get();
-    while(c != EOF && c != '\n' && c != ' ' && c  != ',' && c != '=') {
+    while(c != EOF && c != '\n' && c != ' ' && c  != ',' && c != '=' && c != '\t') {
         c = file.get();
     }
     file.unget();
@@ -204,7 +203,7 @@ Token Scanner::nextToken() {
             lexeme = lexeme * 10 + (c - '0');
         }
 
-        state = (c == EOF ? table[state][25] : table[state][charClass[c]]);
+        state = (c == EOF ? table[state][25] : table[state][charClass[(int) c]]);
     }
     if (!acceptingState[prevState]) {
         clear();
