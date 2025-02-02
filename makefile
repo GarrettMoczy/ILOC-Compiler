@@ -19,6 +19,6 @@ $(EXEC): $(OBJ)
 
 
 clean:
-	rm -f $(OBJ) $(EXEC)
+	rm -f $(OBJ) $(EXEC) *.tar
 
 .PHONY: clean

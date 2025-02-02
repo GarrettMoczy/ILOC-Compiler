@@ -1,64 +1,80 @@
-#include "scanner.h"
-#include <iostream>
-#include <chrono>
+#include "parser.h"
+#include <cstring>
+
+const char * helpMessage = 
+  "C++ based parser for a simplified version of the ILOC language.\n\n"
+  "Usage:\n"
+  "      ./434fe [flags] filename\n\n"
+  "Required arguments:\n"
+  "   filename    the pathname (absolute or relative) to the input file\n\n"
+  "The following optional flags are mutually exclusive and listed in order of descending priority:\n"
+  "      -h       prints this message.\n"
+  "      -r       prints the IR constructed by the parser.\n"
+  "      -p       reports success or errors found.\n"
+  "      -s       prints a list of tokens found by the scanner.\n"
+  "If no flag is specificed the default behavior is -p\n";
 
 
-// const char * helpMessage = "C++ based parser for a simplified version of the ILOC Language\n"
-//             "     -h              produces a list of valid command-line arguments\n"
-//             "     -r <name>       reads the specified file and prints the intermediate representation\n"
-//             "     -p <name>       reads the specified file and reports a success or reports all errors found in the input file\n"
-//             "     -s <name>       reads the specified file and prints a list of the tokens found by the scanner\n";
+PARSER_MODE parseArguments(int argc, char* argv[], std::string& fileName) {
+    PARSER_MODE mode = DEFAULT;
+    bool fileProvided = false;
 
-//    const char * missingNameMessage = "Invalid Usage: please include a valid ILOC file name\n";
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
 
-
- int main (int argc, char * argv[]) {
-   std::ios::sync_with_stdio(false);
-
-    // fflush(stdout);
-    // if (argc == 1) {
-
-    // }
-    // if (argc == 2) {
-    //     if (strcmp(argv[1],"-h") == 0) {
-    //         fwrite(helpMessage, sizeof(char), strlen(helpMessage), stdout);
-    //     }
-    //     else if (strcmp(argv[1],"-r") == 0) {
-    //         fwrite(missingNameMessage, sizeof(char), strlen(missingNameMessage), stdout);
-    //     }
-    //     else if (strcmp(argv[1],"-p") == 0) {
-    //         fwrite(missingNameMessage, sizeof(char), strlen(missingNameMessage), stdout);
-    //     }
-    //     else if (strcmp(argv[1],"-s") == 0) {
-    //         fwrite(missingNameMessage, sizeof(char), strlen(missingNameMessage), stdout);
-    //     }
-    //     else {
-    //         //code for default behavior 
-    //     }
-    // }
-    std::ifstream file("/mnt/class_files/Classes/CSCE-434/Class/lab1/test_inputs/T128k.i"); 
-    
-    if (!file.is_open()) {
-      std::cout << "Err opening file";
-      return 0;
-    }
-    Scanner s (file);
-
-    auto start = std::chrono::high_resolution_clock::now();
-
-    Token currToken = s.nextToken();
-    // currToken.print();
-
-
-   while (currToken.type != ENDFILE)
-    {
-    currToken = s.nextToken();
-    // currToken.print();
+        if (arg == "-h" && mode > HELP) {
+            mode = HELP;
+        } else if (arg == "-r" && mode > REP) {
+            mode = REP;
+        } else if (arg == "-p" && mode > PARSE) {
+            mode = PARSE;
+        } else if (arg == "-s" && mode > SCAN) {
+            mode = SCAN;
+        } else if (!fileProvided) {
+            fileName = arg;
+            fileProvided = true;
+        } else {
+            std::cerr << "ERROR: Multiple file names provided\n";
+            std::cout << helpMessage;
+            exit(EXIT_FAILURE);
+        }
     }
 
-    auto end = std::chrono::high_resolution_clock::now();
+    if (mode == DEFAULT) {
+        mode = PARSE;
+    }
 
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "Time to scan: " << duration.count() << " microseconds\n";
+    return mode;
+}
+
+int main(int argc, char* argv[]) {
+    std::string fileName;
+    PARSER_MODE mode = parseArguments(argc, argv, fileName);
+
+    if (mode == HELP) {
+        std::cout << helpMessage;
+        return 0;
+    }
+
+    if (fileName.empty()) {
+        std::cerr << "ERROR: No file name provided\n";
+        std::cout << helpMessage;
+        return 0;
+    }
+
+  std::ifstream file(fileName);
+  if (!file.is_open()) {
+    std::cerr << "ERROR: Could not open file";
     return 0;
- }
+  }
+
+  ir * data = new ir();
+
+  Parser parser (file, mode, data);
+
+  parser.run();
+
+  delete data;
+
+  return 0;
+}

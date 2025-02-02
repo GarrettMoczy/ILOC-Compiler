@@ -20,7 +20,7 @@ enum TOKEN_TYPE {
 
 enum MEMOP_TYPE {
     LOAD,
-    STORE
+    STORE,
 };
 
 enum ARITHOP_TYPE {
@@ -35,7 +35,21 @@ enum PARSER_MODE {
     HELP,
     REP,
     PARSE,
-    SCAN
+    SCAN,
+    DEFAULT
+};
+
+enum OPCODE {
+    OP_ADD,
+    OP_SUB,
+    OP_MULT,
+    OP_LSHIFT,
+    OP_RSHIFT,
+    OP_LOAD,
+    OP_STORE,
+    OP_LOADI,
+    OP_OUTPUT,
+    OP_NOP
 };
 
 #endif // ENUMS_H

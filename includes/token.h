@@ -17,6 +17,7 @@ public:
     Token(int _type, int _lexeme);
 
     void print();
+    int OpCode();
 };
 
 

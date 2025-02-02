@@ -53,6 +53,7 @@ void Scanner::initCharClasses() {
     charClass[','] = 20;
     charClass[' '] = 21;
     charClass['\t'] = 21;
+    charClass['\r'] = 21;
     charClass['/'] = 22;
     for (char c = '0'; c <= '9'; ++c) charClass[(int) c] = 24;
 }
@@ -198,7 +199,6 @@ Token Scanner::nextToken() {
     while(state != 59) {
         prevState = state;
         char c = file.get();
-
         if ('0' <= c && c <= '9') {
             lexeme = lexeme * 10 + (c - '0');
         }
