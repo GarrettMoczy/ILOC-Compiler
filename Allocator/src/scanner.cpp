@@ -1,4 +1,4 @@
-#include "scanner.h"
+#include "../includes/scanner.h"
 #include <iostream>
 
 Scanner::Scanner(std::ifstream& _file) : file{_file} {

@@ -6,7 +6,7 @@ SRCDIR = src
 SOURCES = $(wildcard $(SRCDIR)/*.cpp)
 OBJ = $(SOURCES:$(SRCDIR)/%.cpp=%.o)
 
-EXEC = 434fe
+EXEC = 434alloc
 
 build: $(EXEC)
 

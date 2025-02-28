@@ -2,6 +2,8 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 
+#include <string>
+
 enum TOKEN_TYPE {
     MEMOP,
     LOADI,
@@ -33,9 +35,8 @@ enum ARITHOP_TYPE {
 
 enum PARSER_MODE {
     HELP,
-    REP,
+    RENAME,
     PARSE,
-    SCAN,
     DEFAULT
 };
 
@@ -51,5 +52,6 @@ enum OPCODE {
     OP_OUTPUT,
     OP_NOP
 };
+
 
 #endif // ENUMS_H

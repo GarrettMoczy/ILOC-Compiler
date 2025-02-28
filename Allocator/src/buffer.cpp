@@ -1,4 +1,4 @@
-#include "buffer.h"
+#include "../includes/buffer.h"
 
 Buffer::Buffer(std::ifstream& _file) : file(_file) {
     file.read(buf, sizeof(buf));

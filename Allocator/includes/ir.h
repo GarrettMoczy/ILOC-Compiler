@@ -11,6 +11,7 @@ private:
         private:
             Node *prev, *next;
             int line, opcode;
+            int maxSR;
             struct
             {
                 int sr, vr, pr, nu;
@@ -28,7 +29,7 @@ private:
     };
 
     Node head, tail;
-    int _size;
+    int _size, maxSR;
 
 public:
     ir();
@@ -37,8 +38,10 @@ public:
     void clear();
     void print();
     void emplace_back(int line, int opcode, int arg1, int arg2, int arg3);
+    void rename();
+    void updateSR(int reg);
+    void irToCode();
 };
-
 
 
 #endif

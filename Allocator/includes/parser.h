@@ -8,7 +8,7 @@
 class Parser 
 {
 private:
-    int mode, line, typeErr, syntaxErr;
+    int mode, line, typeErr, syntaxErr, maxSR;
     Scanner scan;
     Token currToken;
     ir *data;

@@ -1,4 +1,4 @@
-#include "token.h"
+#include "../includes/token.h"
 
 Token::Token(int _type, int _lexeme) : type(_type), lexeme(_lexeme) {};
 

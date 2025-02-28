@@ -1,6 +1,6 @@
-#include "parser.h"
+#include "../includes/parser.h"
 
-Parser::Parser(std::ifstream& file, int mode, ir *_data) :  mode(mode), line(1), typeErr(0), syntaxErr(0), scan(file) {
+Parser::Parser(std::ifstream& file, int mode, ir *_data) :  mode(mode), line(1), typeErr(0), syntaxErr(0), maxSR(-1), scan(file)  {
     data = _data;
 };
 
@@ -10,13 +10,15 @@ void Parser::finish_memop() {
     int opcode = currToken.OpCode();
     currToken = scan.nextToken();
 
-    if (currToken.type != REG) {
+    if (currToken.type != REG && currToken.type) {
         std::cerr << "ERROR " << line << ": REG token expected after MEMOP ";
         syntaxErr++;
         handle_err();
         return;
     }
     arg1 = currToken.lexeme;
+    
+    data->updateSR(arg1);
 
     currToken = scan.nextToken();
 
@@ -26,8 +28,9 @@ void Parser::finish_memop() {
         handle_err();
         return;
     }
-    currToken = scan.nextToken();
 
+    currToken = scan.nextToken();
+    
     if (currToken.type != REG) {
         std::cerr << "ERROR " << line << ": REG token expected after INTO ";
         syntaxErr++;
@@ -36,6 +39,8 @@ void Parser::finish_memop() {
     }
 
     arg3 = currToken.lexeme;
+
+    data->updateSR(arg3);
 
     currToken = scan.nextToken();
 
@@ -47,8 +52,10 @@ void Parser::finish_memop() {
         handle_err();
         return;
     }
-
-    data->emplace_back(line, opcode, arg1,-1,arg3);
+    if (opcode == OPCODE::OP_LOAD)
+        data->emplace_back(line, opcode, arg1,-1,arg3);
+    else
+        data->emplace_back(line,opcode,arg1,arg3,-1);
 
     line++;
 }
@@ -68,6 +75,8 @@ void Parser::finish_loadI() {
 
     arg1 = currToken.lexeme;
 
+    data->updateSR(arg1);
+
     currToken = scan.nextToken();
 
     if (currToken.type != INTO) {
@@ -86,6 +95,8 @@ void Parser::finish_loadI() {
     }
 
     arg3 = currToken.lexeme;
+
+    data->updateSR(arg3);
 
     currToken = scan.nextToken();
 
@@ -119,6 +130,8 @@ void Parser::finish_arithop() {
 
     arg1 = currToken.lexeme;
 
+    data->updateSR(arg1);
+
     currToken = scan.nextToken();
 
     if (currToken.type != COMMA) {
@@ -139,6 +152,8 @@ void Parser::finish_arithop() {
 
     arg2 = currToken.lexeme;
 
+    data->updateSR(arg2);
+
     currToken = scan.nextToken();
 
     if (currToken.type != INTO) {
@@ -158,6 +173,8 @@ void Parser::finish_arithop() {
     }
     
     arg3 = currToken.lexeme;
+
+    data->updateSR(arg3);
 
     currToken = scan.nextToken();
 
@@ -208,7 +225,7 @@ void Parser::finish_output() {
 }
 
 void Parser::finish_nop() {
-    int opcode = currToken.OpCode();
+    // int opcode = currToken.OpCode();
 
     currToken = scan.nextToken();
 
@@ -220,7 +237,7 @@ void Parser::finish_nop() {
         handle_err();
         return;
     }
-    data->emplace_back(line, opcode, -1,-1,-1);
+    // data->emplace_back(line, opcode, -1,-1,-1);
 
     line++;
 }
@@ -281,17 +298,6 @@ void Parser::run() {
     currToken = scan.nextToken();
     switch (mode)
     {
-    case SCAN: 
-        std::cout << "Line " << line << ": ";
-        currToken.print();
-        while(currToken.type != ENDFILE) {
-            if (currToken.type == ENDLINE)  {
-                std::cout << "Line " << ++line << ": "; 
-            }
-            currToken = scan.nextToken();
-            currToken.print();
-        }
-        break;
     case PARSE:
         parse();
         if (typeErr + syntaxErr == 0) {
@@ -300,13 +306,15 @@ void Parser::run() {
         }
         std::cerr << "Parsing failed with " << typeErr << " type and " << syntaxErr << " syntax error/s.\n";
         break;
-    case REP:
+    case RENAME:
         parse();
         if (typeErr + syntaxErr == 0) {
-            data->print();
+            data->rename();
+            data->irToCode();
             return;
         }
         std::cerr << "Unable to create IR. "<< typeErr << " type and " << syntaxErr << " syntax error/s detected.\n";
+
     default:
         break;
     }

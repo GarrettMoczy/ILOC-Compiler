@@ -1,0 +1,16 @@
+CodeCheck1 on '/home/ugrads/g/gcmoczy/ILOC-Compiler/Renaming/434alloc' for user gcmoczy
+Using '/tmp/gcmoczy-code-check-1' for temporary storage
+Run on 02-21-25 at 13:42:28 on host linux2.engr.tamu.edu
+Changing directory to '/home/ugrads/g/gcmoczy/ILOC-Compiler/Renaming'.
+
+Testing 'cc1.i'	 correct in 20 cycles
+Testing 'cc2.i'	 correct in 35 cycles
+Testing 'cc3.i'	 correct in 37 cycles
+Testing 'cc4.i'	 correct in 1002 cycles
+Testing 'cc5.i'	 correct in 68 cycles
+
+./434alloc Passes Code Check 1
+
+Removing /tmp/gcmoczy-code-check-1
+
+Code Check 1 script exits normally.

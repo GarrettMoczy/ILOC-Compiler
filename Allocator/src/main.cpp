@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "../includes/parser.h"
 #include <cstring>
 
 const char * helpMessage = 
@@ -24,12 +24,10 @@ PARSER_MODE parseArguments(int argc, char* argv[], std::string& fileName) {
 
         if (arg == "-h" && mode > HELP) {
             mode = HELP;
-        } else if (arg == "-r" && mode > REP) {
-            mode = REP;
+        } else if (arg == "-x" && mode > RENAME) {
+            mode = RENAME;
         } else if (arg == "-p" && mode > PARSE) {
             mode = PARSE;
-        } else if (arg == "-s" && mode > SCAN) {
-            mode = SCAN;
         } else if (!fileProvided) {
             fileName = arg;
             fileProvided = true;
@@ -43,7 +41,6 @@ PARSER_MODE parseArguments(int argc, char* argv[], std::string& fileName) {
     if (mode == DEFAULT) {
         mode = PARSE;
     }
-
     return mode;
 }
 
