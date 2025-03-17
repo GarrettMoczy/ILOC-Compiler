@@ -1,6 +1,6 @@
 #include "../includes/parser.h"
 
-Parser::Parser(std::ifstream& file, int mode, ir *_data) :  mode(mode), line(1), typeErr(0), syntaxErr(0), maxSR(-1), scan(file)  {
+Parser::Parser(std::ifstream& file, ir *_data) : line(1), typeErr(0), syntaxErr(0), maxSR(-1), scan(file)  {
     data = _data;
 };
 
@@ -294,28 +294,14 @@ void Parser::parse()
 
 
 
-void Parser::run() {
+bool Parser::run() {
     currToken = scan.nextToken();
-    switch (mode)
-    {
-    case PARSE:
-        parse();
-        if (typeErr + syntaxErr == 0) {
-            std::cout << "File successfully parsed with " << data->size() <<  " operations.\n";
-            return;
-        }
-        std::cerr << "Parsing failed with " << typeErr << " type and " << syntaxErr << " syntax error/s.\n";
-        break;
-    case RENAME:
-        parse();
-        if (typeErr + syntaxErr == 0) {
-            data->rename();
-            data->irToCode();
-            return;
-        }
-        std::cerr << "Unable to create IR. "<< typeErr << " type and " << syntaxErr << " syntax error/s detected.\n";
-
-    default:
-        break;
+   
+    parse();
+    if (typeErr + syntaxErr == 0) {
+        // std::cout << "File successfully parsed with " << data->size() <<  " operations.\n";
+        return true;
     }
+    std::cerr << "Parsing failed with " << typeErr << " type and " << syntaxErr << " syntax error/s.\n";
+    return false;
 }

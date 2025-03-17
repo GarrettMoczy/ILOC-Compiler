@@ -20,9 +20,9 @@ private:
     void handle_err();
     void parse();
 public:
-    Parser(std::ifstream &file, int mode, ir* data);
+    Parser(std::ifstream &file, ir* data);
     ~Parser() = default;
-    void run();
+    bool run();
 };
 
 

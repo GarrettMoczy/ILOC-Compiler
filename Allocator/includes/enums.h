@@ -33,13 +33,6 @@ enum ARITHOP_TYPE {
     RSHIFT
 };
 
-enum PARSER_MODE {
-    HELP,
-    RENAME,
-    PARSE,
-    DEFAULT
-};
-
 enum OPCODE {
     OP_ADD,
     OP_SUB,
